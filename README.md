@@ -15,6 +15,7 @@ It fetches CVE details, scans your repository for declared dependencies and actu
 - Score and list packages potentially affected by the CVE
 - Generate a readable report with risk hints
 - Optional LLM explanation of the CVE (OpenAI)
+- Optional AI-powered scoring adjustment for more accurate package relevance assessment
 
 ## Installation
 1. Clone this repository and navigate to the project directory.
@@ -40,12 +41,23 @@ Example output includes:
 - Detected packages and their risk score
 - Short recommendations
 
-## Optional: LLM Explanation
+## Optional: LLM Features
+
+### CVE Explanation
 If you want a plain‑English summary of the CVE impact, enable the LLM explainer:
 
 ```bash
 python project.py CVE-2021-44228 --use-llm
 ```
+
+### AI Scoring Adjustment
+For more accurate package relevance scoring, enable AI-powered adjustment:
+
+```bash
+python project.py CVE-2021-44228 --use-llm-score
+```
+
+This feature uses OpenAI to analyze each package against the CVE details and suggests score adjustments (-0.5 to +0.5) based on vendor/product matching, version ranges, and ecosystem alignment.
 
 Set your OpenAI API key first. You can define it in a `.env` file in the project root:
 
@@ -75,18 +87,18 @@ or export it in your shell environment before running the command.
 
 ## Future Work
 -Extend import scanning to other languages (JS/TS, Go, Java) to improve coverage.
--Enhance heuristics with a “LLM thinking score”: analyze CVE relevance using AI reasoning on dependency context and code usage.
 -Incorporate transitive dependency analysis to detect indirect vulnerability exposure.
 -Refine scoring with weighted factors combining declared dependencies, actual imports, and AI insights.
 
 ## Commands and Options
 ```bash
-python project.py <CVE_ID> [--path <repo_dir>] [--use-llm]
+python project.py <CVE_ID> [--path <repo_dir>] [--use-llm] [--use-llm-score]
 ```
 
 - `<CVE_ID>`: Required, e.g., `CVE-2023-12345`
 - `--path`: Directory of the repository to scan (default: `.`)
 - `--use-llm`: Adds an AI explanation to the end of the report
+- `--use-llm-score`: Enables AI-powered scoring adjustment for package relevance
 
 ## Limitations
 - Matching is heuristic and best‑effort; always verify with vendor advisories
